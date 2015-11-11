@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/menu_button_add_to_calendar" android:title="@string/news_add_event_to_calendar" />
+    <item android:id="@+id/menu_button_share_via_email" android:title="@string/news_share_event_via_email" />
+    <item android:id="@+id/menu_button_share_via_sms"   android:title="@string/news_share_event_via_sms" />
+    <item android:id="@+id/menu_button_cancel"          android:title="@string/news_menu_cancel" />
+</menu>

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/romanblack_feed_item"
+              android:orientation="vertical"
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:background="#FFF">
+
+    <LinearLayout android:layout_width="fill_parent"
+                  android:layout_height="wrap_content"
+                  android:orientation="horizontal" 
+                  android:padding="0dp"
+                  android:paddingTop="0dp">
+
+        <LinearLayout android:orientation="vertical"  
+                      android:layout_width="60dp"  
+                      android:layout_height="70dp" 
+                      android:background="@drawable/romanblack_rss_date_bg"
+                      android:gravity="center"
+                      android:layout_marginRight="0dp"
+                      android:layout_marginTop="0dp">
+                    
+            <TextView android:id="@+id/romanblack_rss_month" 
+                      android:text="@string/jun"
+                      android:layout_height="16dp" 
+                      android:layout_width="wrap_content"
+                      android:gravity="center"
+                      android:textSize="14sp"
+                      android:textColor="#FFF"
+                      android:textStyle="bold"
+                      android:paddingTop="0dp"
+                      android:includeFontPadding="false"/>
+                    
+            <TextView android:id="@+id/romanblack_rss_day" 
+                      android:text="01" 
+                      android:layout_height="33dp" 
+                      android:layout_width="wrap_content"
+                      android:gravity="top"
+                      android:textSize="35sp"
+                      android:textColor="#fff"
+                      android:textStyle="bold"
+                      android:paddingTop="0dp"
+                      android:includeFontPadding="false"/>
+                
+        </LinearLayout>
+              
+        <LinearLayout android:orientation="vertical"  
+                      android:layout_width="wrap_content"  
+                      android:layout_height="70dp" 
+                      android:layout_weight="1"
+                      android:paddingLeft="10dp"
+                      android:paddingRight="10dp"
+                      android:paddingTop="13dp">
+                
+            <TextView android:text="@string/title"
+                      android:id="@+id/romanblack_rss_title" 
+                      android:textSize="14sp" 			
+                      android:textColor="#222"
+                      android:layout_width="wrap_content" 
+                      android:layout_height="wrap_content"
+                      android:singleLine="true"
+                      android:includeFontPadding="false"
+                      android:textStyle="bold"/>
+                
+            <TextView android:text="@string/description"
+                      android:id="@+id/romanblack_rss_description" 
+                      android:textSize="11sp" 			
+                      android:textColor="#444"
+                      android:layout_width="wrap_content" 
+                      android:layout_height="wrap_content"
+                      android:maxLines="1"
+                      android:ellipsize="end"/>
+            
+            <TextView android:text="@string/description"
+                      android:id="@+id/romanblack_rss_date" 
+                      android:textSize="9sp" 			
+                      android:textColor="#444"
+                      android:layout_width="fill_parent" 
+                      android:layout_height="wrap_content"
+                      android:singleLine="true"
+                      android:gravity="right"/>
+                
+        </LinearLayout>
+              
+    </LinearLayout>
+         
+</LinearLayout>	

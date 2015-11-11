@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="romanblack_rss_from">от</string>
+    <string name="romanblack_rss_at">в</string>
+    <string name="romanblack_rss_reverse">В обратном порядке</string>
+    <string name="romanblack_rss_refresh">Обновить</string>
+    <string name="romanblack_rss_yes">Да</string>
+    <string name="romanblack_rss_no">Нет</string>
+    <string name="romanblack_rss_feed">Лента</string>
+    <string name="romanblack_rss_html_page">HTML страница</string>
+    <string name="romanblack_rss_send_email">Отправить email</string>
+    <string name="romanblack_rss_read_more">Ещё</string>
+    <string name="romanblack_rss_show_media">Играть</string>
+    <string name="romanblack_rss_loading">Загрузка...</string>
+    <string name="romanblack_rss_cannot_init">Невозможно инициализировать плагин</string>
+    <string name="romanblack_rss_alert_no_internet">Мобильный интернет отключен. Включите интернет, либо используйте
+        WiFi
+    </string>
+    <string name="romanblack_rss_alert_notifications_added_first_part">Добавлено</string>
+    <string name="romanblack_rss_alert_notifications_added_seconds_part">Уведомления</string>
+    <string name="romanblack_rss_alert_video_not_valid">Видео по ссылке недоступна</string>
+    <string name="romanblack_rss_alert_video_press_play">"Нажмите кнопку ""play"""</string>
+    <string name="romanblack_rss_dialog_add_notofications">Вы хотите добавить уведомления?</string>
+    <string name="romanblack_rss_ptr_tap">Нажмите чтобы обновить</string>
+    <string name="romanblack_rss_ptr_release">Отпустите чтобы обновить</string>
+    <string name="romanblack_rss_ptr_pull">Проведите вниз чтобы обновить</string>
+    <string name="title">Заголовок</string>
+    <string name="tap_to_refresh">Нажмите чтобы обновить</string>
+    <string name="one_from_one">один из одного</string>
+    <string name="open_app">Проведите вниз чтобы обновить</string>
+    <string name="close">Закрыть</string>
+    <string name="description">Описание</string>
+    <string name="discription">Описание</string>
+    <string name="rss_back_button">Назад</string>
+    <string name="rss_home_button">Домой</string>
+    <string name="news_add_event_to_calendar">Добавить событие в календарь</string>
+    <string name="news_share_event_via_sms">Поделиться через СМС</string>
+    <string name="news_share_event_via_email">Поделиться через Email</string>
+    <string name="news_menu_cancel">Отмена</string>
+
+    <string name="rss_no_items">В rss отсутствуют записи</string>
+</resources>

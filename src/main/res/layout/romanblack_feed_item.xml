@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/romanblack_feed_item"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="#FFF">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" android:layout_weight="1">
+            <TextView
+                android:text="@string/title"
+                android:id="@+id/romanblack_rss_title"
+                android:textSize="14sp"
+                android:textColor="#222"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" 
+                android:maxLines="2"
+                android:layout_marginLeft="5dp" 
+                android:layout_marginTop="8dp"
+                android:layout_marginRight="5dp" 
+                android:layout_marginBottom="2dp" 
+                android:textStyle="bold"/>
+            <TextView
+                android:text="@string/discription"
+                android:id="@+id/romanblack_rss_description"
+                android:textSize="12sp"
+                android:textColor="#444"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginBottom="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" 
+                android:maxLines="2"
+                android:ellipsize="end"/>
+            <TextView
+                android:text="2011-01-01"
+                android:id="@+id/romanblack_rss_pubdate"
+                android:textSize="10sp"
+                android:textColor="#666"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginBottom="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:id="@+id/news_arrow" android:src="@drawable/news_arrow" android:layout_weight="1"
+            android:layout_margin="5dp" android:layout_gravity="center" android:layout_marginRight="10dp"/>
+    </LinearLayout>
+</LinearLayout>	
