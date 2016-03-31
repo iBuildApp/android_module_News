@@ -151,7 +151,7 @@ public class EventsNotificationView extends Activity implements OnTouchListener 
     }
 
     /**
-     * Detect left or right sliding
+     * Detech left or right sliding
      * @return true
      */
     @Override

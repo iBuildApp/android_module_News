@@ -1,13 +1,13 @@
 /****************************************************************************
-*                                                                           *
-*  Copyright (C) 2014-2015 iBuildApp, Inc. ( http://ibuildapp.com )         *
-*                                                                           *
-*  This file is part of iBuildApp.                                          *
-*                                                                           *
-*  This Source Code Form is subject to the terms of the iBuildApp License.  *
-*  You can obtain one at http://ibuildapp.com/license/                      *
-*                                                                           *
-****************************************************************************/
+ *                                                                           *
+ *  Copyright (C) 2014-2015 iBuildApp, Inc. ( http://ibuildapp.com )         *
+ *                                                                           *
+ *  This file is part of iBuildApp.                                          *
+ *                                                                           *
+ *  This Source Code Form is subject to the terms of the iBuildApp License.  *
+ *  You can obtain one at http://ibuildapp.com/license/                      *
+ *                                                                           *
+ ****************************************************************************/
 package com.ibuildapp.romanblack.NewsPlugin;
 
 import android.content.Context;
@@ -23,7 +23,7 @@ import java.util.Locale;
 
 /**
  * Adapter for events list.
- * Used if func = events only.
+ * Using if func = events only.
  */
 public class EventsAdapter extends BaseAdapter {
 
@@ -36,7 +36,7 @@ public class EventsAdapter extends BaseAdapter {
      * @param context - Activity that using this adapter
      * @param resource
      * @param list - event items list
-     * @param bgColor 
+     * @param bgColor
      */
     EventsAdapter(Context context, int resource, ArrayList<FeedItem> list, int bgColor) {
         super();
@@ -90,7 +90,7 @@ public class EventsAdapter extends BaseAdapter {
             TextView month = (TextView) row.findViewById(R.id.romanblack_rss_month);
             month.setTextColor(Statics.color2);
 
-            title.setText(items.get(position).getTitle());        
+            title.setText(items.get(position).getTitle());
             description.setText(items.get(position).getAnounce(75));
             day.setText(items.get(position).getPubdate("dd"));
             month.setText(items.get(position).getPubdate("MMM").toUpperCase());

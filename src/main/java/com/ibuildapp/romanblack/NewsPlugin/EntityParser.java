@@ -19,7 +19,7 @@ import org.xml.sax.Attributes;
 import java.util.ArrayList;
 
 /**
- * Used for parsing module xml data.
+ * This class using for parsing module xml data.
  */
 public class EntityParser {
 
@@ -27,7 +27,7 @@ public class EntityParser {
     private String xml = "";
     private String type = "";
     /**
-     * One of values: "news" | "rss" | "events"
+     * One of values - "news" | "rss" | "events"
      */
     private String func = "";
     private String feed = "";

@@ -1,13 +1,13 @@
 /****************************************************************************
-*                                                                           *
-*  Copyright (C) 2014-2015 iBuildApp, Inc. ( http://ibuildapp.com )         *
-*                                                                           *
-*  This file is part of iBuildApp.                                          *
-*                                                                           *
-*  This Source Code Form is subject to the terms of the iBuildApp License.  *
-*  You can obtain one at http://ibuildapp.com/license/                      *
-*                                                                           *
-****************************************************************************/
+ *                                                                           *
+ *  Copyright (C) 2014-2015 iBuildApp, Inc. ( http://ibuildapp.com )         *
+ *                                                                           *
+ *  This file is part of iBuildApp.                                          *
+ *                                                                           *
+ *  This Source Code Form is subject to the terms of the iBuildApp License.  *
+ *  You can obtain one at http://ibuildapp.com/license/                      *
+ *                                                                           *
+ ****************************************************************************/
 package com.ibuildapp.romanblack.NewsPlugin;
 
 import android.content.Context;
@@ -34,7 +34,7 @@ import java.util.HashMap;
 
 /**
  * Adapter for news list.
- * Used if func equals "rss" or "news".
+ * Using if func = rss or func = news.
  */
 public class FeedAdapter extends BaseAdapter {
 
@@ -50,7 +50,7 @@ public class FeedAdapter extends BaseAdapter {
      * Constructs new FeedAdapter instance
      * @param context - Activity that using this adapter
      * @param list - event items list
-     * @param bgColor 
+     * @param bgColor
      */
     FeedAdapter(Context context, ArrayList<FeedItem> list, int bgColor) {
         items = list;
@@ -78,7 +78,7 @@ public class FeedAdapter extends BaseAdapter {
     /**
      * Set rss image size to show in list
      * @param width
-     * @param height 
+     * @param height
      */
     public void setImageSize(int width, int height) {
         imageWidth = width;

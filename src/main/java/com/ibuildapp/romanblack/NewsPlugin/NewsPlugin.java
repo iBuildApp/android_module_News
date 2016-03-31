@@ -1,13 +1,13 @@
 /****************************************************************************
-*                                                                           *
-*  Copyright (C) 2014-2015 iBuildApp, Inc. ( http://ibuildapp.com )         *
-*                                                                           *
-*  This file is part of iBuildApp.                                          *
-*                                                                           *
-*  This Source Code Form is subject to the terms of the iBuildApp License.  *
-*  You can obtain one at http://ibuildapp.com/license/                      *
-*                                                                           *
-****************************************************************************/
+ *                                                                           *
+ *  Copyright (C) 2014-2015 iBuildApp, Inc. ( http://ibuildapp.com )         *
+ *                                                                           *
+ *  This file is part of iBuildApp.                                          *
+ *                                                                           *
+ *  This Source Code Form is subject to the terms of the iBuildApp License.  *
+ *  You can obtain one at http://ibuildapp.com/license/                      *
+ *                                                                           *
+ ****************************************************************************/
 package com.ibuildapp.romanblack.NewsPlugin;
 
 import android.app.*;
@@ -16,6 +16,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -54,6 +55,7 @@ public class NewsPlugin extends AppBuilderModuleMain {
     private Timer timer = null;
     private boolean isOnline = false;
     private boolean useCache = false;
+    //private boolean isRSS = false;
     private ListView listView = null;
     private String feedURL = "";
     private String funcName = "";
@@ -90,7 +92,7 @@ public class NewsPlugin extends AppBuilderModuleMain {
 
         @Override
         public void run() {
-            try {
+            try {//ErrorLogging
 
                 if (item != null) {
                     // get event message <description>
@@ -156,19 +158,26 @@ public class NewsPlugin extends AppBuilderModuleMain {
 
                     NotificationManager mManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
                     // create one notification
-                    Notification notification = new Notification(R.drawable.icon_notification,
-                            notificationBarTitle, System.currentTimeMillis());
-                    notification.flags |= Notification.FLAG_AUTO_CANCEL;
 
-                    PendingIntent pendingIntent = PendingIntent.getActivity(NewsPlugin.this, (int) (widget.getOrder() * 1000 + this.order), intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_ONE_SHOT);
-                    notification.setLatestEventInfo(NewsPlugin.this, notificationTitle, notificationText, pendingIntent);
+                    Notification.Builder builder = new Notification.Builder(NewsPlugin.this);
+                    builder.setSmallIcon(R.drawable.icon_notification);
+                    builder.setTicker(notificationText);
+                    builder.setWhen(System.currentTimeMillis());
+
+                    PendingIntent pendingIntent = PendingIntent.getActivity(NewsPlugin.this, (widget.getOrder() * 1000 + this.order), intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_ONE_SHOT);
+
+                    builder.setContentIntent(pendingIntent);
+                    builder.setContentTitle(notificationTitle);
+                    builder.setContentText(notificationText);
+                    builder.setOngoing(true);
+                    builder.setAutoCancel(false);
 
                     mManager.notify(getResources().getString(R.string.app_name)
-                            + "-events-" + widget.getOrder() + " " + item.getTitle(),
-                            widget.getOrder(), notification);
+                                    + "-events-" + widget.getOrder() + " " + item.getTitle(),
+                            widget.getOrder(), builder.build());
                 }
 
-            } catch (Exception ex) { 
+            } catch (Exception ex) { // Error Logging
             }
         }
 
@@ -285,7 +294,7 @@ public class NewsPlugin extends AppBuilderModuleMain {
         try {
             setContentView(R.layout.romanblack_feed_main);
             setTitle(R.string.romanblack_rss_feed);
-
+            setTopbarTitleTypeface(Typeface.NORMAL);
             mainlLayout = findViewById(R.id.romanblack_feed_main);
             listView = (ListView) findViewById(R.id.romanblack_feedList);
 
@@ -302,15 +311,12 @@ public class NewsPlugin extends AppBuilderModuleMain {
                 setTopBarTitle(widget.getTitle());
             }
 
-            boolean showSideBar = ((Boolean) getIntent().getExtras().getSerializable("showSideBar")).booleanValue();
-            if (!showSideBar) {
-                setTopBarLeftButtonText(getString(R.string.rss_home_button), true, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        finish();
-                    }
-                });
-            }
+            setTopBarLeftButtonText(getString(R.string.rss_home_button), true, new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    finish();
+                }
+            });
 
             try {
                 if (widget.getPluginXmlData().length() == 0) {
@@ -331,6 +337,7 @@ public class NewsPlugin extends AppBuilderModuleMain {
                 cache.mkdirs();
             }
 
+            // 3 seconds
             widgetMD5 = Utils.md5(widget.getPluginXmlData());
             File cacheData = new File(cachePath + "/cache.data");
             if (cacheData.exists() && cacheData.length() > 0) {
@@ -407,7 +414,7 @@ public class NewsPlugin extends AppBuilderModuleMain {
                     items = parser.getItems();
 
                     if ("rss".equals(parser.getFeedType())) {
-                        Statics.isRSS = true;
+                        /*isRSS*/Statics.isRSS = true;
                         feedURL = parser.getFeedUrl();
                         if (isOnline) {
                             FeedParser reader = new FeedParser(parser.getFeedUrl());
@@ -449,18 +456,20 @@ public class NewsPlugin extends AppBuilderModuleMain {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
+                            boolean a = Utils.isChemeDark(Statics.color1);
                             boolean needBlackSeparator =
                                     Statics.color1 == Color.WHITE ||
-                                    Statics.color1 == Color.parseColor("#c2e793") || //green
-                                    Statics.color1 == Color.parseColor("#f3ea98"); //yellow
-                            listView.setDivider(new ColorDrawable(Color.parseColor(needBlackSeparator ? "#4d000000" : "#4dffffff")));
+                                            Statics.color1 == Color.parseColor("#c2e793") || //green
+                                            Statics.color1 == Color.parseColor("#f3ea98"); //yellow
+                            // listView.setDivider(new ColorDrawable(Color.parseColor(a ? "#4d000000" : "#4dffffff")));
+                            listView.setDivider(new ColorDrawable(Color.parseColor( "#808080" )));// iOS whiteColor
                             listView.setDividerHeight(1);
                         }
                     });
                 }
             }.start();
 
-        } catch (Exception ex) { 
+        } catch (Exception ex) { // Error Logging
         }
     }
 
@@ -495,7 +504,7 @@ public class NewsPlugin extends AppBuilderModuleMain {
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        return true;
+        return false;
     }
 
     /**
@@ -520,7 +529,7 @@ public class NewsPlugin extends AppBuilderModuleMain {
             }
         });
 
-        if (Statics.isRSS) {
+        if (/*isRSS*/Statics.isRSS) {
             menuItem = menu.add("");
             menuItem.setTitle(R.string.romanblack_rss_refresh);
             menuItem.setOnMenuItemClickListener(new OnMenuItemClickListener() {
@@ -536,7 +545,7 @@ public class NewsPlugin extends AppBuilderModuleMain {
             });
         }
 
-        return true;
+        return false;
     }
 
     /**
@@ -554,14 +563,14 @@ public class NewsPlugin extends AppBuilderModuleMain {
      * Async loading and parsing RSS feed.
      */
     private void loadRSS() {
-        try {
+        try {//ErrorLogging
 
             progressDialog = ProgressDialog.show(this, null, getString(R.string.romanblack_rss_loading), true);
 
             new Thread() {
                 @Override
                 public void run() {
-                    
+                    // parsing
                     FeedParser reader = new FeedParser(feedURL);
                     items = reader.parseFeed();
 
@@ -592,7 +601,7 @@ public class NewsPlugin extends AppBuilderModuleMain {
                 }
             }.start();
 
-        } catch (Exception ex) { 
+        } catch (Exception ex) { // Error Logging
         }
     }
 
@@ -600,7 +609,7 @@ public class NewsPlugin extends AppBuilderModuleMain {
      * Async loading and parsing RSS feed when PullToRefresh header released.
      */
     private void loadRSSOnScroll() {
-        if (Statics.isRSS) {
+        if (/*isRSS*/Statics.isRSS) {
             if (cm != null) {
                 NetworkInfo ni = cm.getActiveNetworkInfo();
                 if (ni != null && ni.isConnectedOrConnecting()) {
@@ -622,7 +631,7 @@ public class NewsPlugin extends AppBuilderModuleMain {
             finish();
             return;
         }
-        
+
         if (funcName.equalsIgnoreCase("EVENTS")) {
             handler.sendEmptyMessage(SHOW_EVENTS);
         } else if (funcName.equalsIgnoreCase("NEWS")) {
@@ -635,6 +644,8 @@ public class NewsPlugin extends AppBuilderModuleMain {
             }
         }
     }
+
+    /* PRIVATE METHODS */
 
     /**
      * Shows RSS feed list.
@@ -669,7 +680,7 @@ public class NewsPlugin extends AppBuilderModuleMain {
                     Message msg = handler.obtainMessage(RESET_COLOR, (Object) view);
                     handler.sendMessageDelayed(msg, 300);
 
-                    if (Statics.isRSS) {
+                    if (/*isRSS*/Statics.isRSS) {
                         showDetails(position - 1);
                     } else {
                         showDetails(position);
@@ -677,7 +688,7 @@ public class NewsPlugin extends AppBuilderModuleMain {
                 }
             });
 
-            if (Statics.isRSS) {
+            if (/*isRSS*/Statics.isRSS) {
                 ((PullToRefreshListView) listView).setOnRefreshListener(new PullToRefreshListView.OnRefreshListener() {
                     public void onRefresh() {
                         loadRSSOnScroll();
@@ -690,7 +701,7 @@ public class NewsPlugin extends AppBuilderModuleMain {
 
             handler.sendEmptyMessage(HIDE_PROGRESS_DIALOG);
 
-        } catch (Exception ex) { 
+        } catch (Exception ex) { // Error Logging
         }
     }
 
@@ -699,7 +710,7 @@ public class NewsPlugin extends AppBuilderModuleMain {
      * Called when func = "news"
      */
     private void showNews() {
-        try {
+        try {//ErrorLogging
 
             setTitle(title);
             if (items.isEmpty()) {
@@ -725,7 +736,7 @@ public class NewsPlugin extends AppBuilderModuleMain {
                     bgColor = Color.HSVToColor(127, hsv);
                     ((ViewGroup) view).getChildAt(0).setBackgroundColor(bgColor);
 
-                    if (Statics.isRSS) {
+                    if (/*isRSS*/Statics.isRSS) {
                         showDetails(position - 1);
                     } else {
                         showDetails(position);
@@ -733,7 +744,7 @@ public class NewsPlugin extends AppBuilderModuleMain {
                 }
             });
 
-            if (Statics.isRSS) {
+            if (/*isRSS*/Statics.isRSS) {
                 ((PullToRefreshListView) listView).setOnRefreshListener(new PullToRefreshListView.OnRefreshListener() {
                     public void onRefresh() {
                         loadRSSOnScroll();
@@ -746,7 +757,7 @@ public class NewsPlugin extends AppBuilderModuleMain {
 
             handler.sendEmptyMessage(HIDE_PROGRESS_DIALOG);
 
-        } catch (Exception ex) { 
+        } catch (Exception ex) { // Error Logging
         }
     }
 
@@ -784,7 +795,7 @@ public class NewsPlugin extends AppBuilderModuleMain {
                     bgColor = Color.HSVToColor(127, hsv);
                     view.setBackgroundColor(bgColor);
 
-                    if (Statics.isRSS) {
+                    if (/*isRSS*/Statics.isRSS) {
                         showDetails(position - 1);
                     } else {
                         showDetails(position);
@@ -793,7 +804,7 @@ public class NewsPlugin extends AppBuilderModuleMain {
             });
 
 
-            if (Statics.isRSS) {
+            if (/*isRSS*/Statics.isRSS) {
                 ((PullToRefreshListView) listView).setOnRefreshListener(new PullToRefreshListView.OnRefreshListener() {
                     public void onRefresh() {
                         loadRSSOnScroll();
@@ -805,7 +816,7 @@ public class NewsPlugin extends AppBuilderModuleMain {
             }
 
             if (widget.hasParameter("add_local_notific")) {
-                // show alert dialog
+                // show allert dialog! 
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setMessage(getString(R.string.romanblack_rss_dialog_add_notofications));
                 builder.setPositiveButton(getString(R.string.romanblack_rss_yes), new DialogInterface.OnClickListener() {
@@ -822,7 +833,7 @@ public class NewsPlugin extends AppBuilderModuleMain {
 
 
             handler.sendEmptyMessage(HIDE_PROGRESS_DIALOG);
-        } catch (Exception ex) { 
+        } catch (Exception ex) { // Error Logging
         }
     }
 
@@ -834,7 +845,7 @@ public class NewsPlugin extends AppBuilderModuleMain {
     private void showDetails(int position) {
         try {
 
-            if (items.get(position).getMediaType().contains("image") || !items.get(position).hasMedia() || items.get(position).getDescription().length() > 70) {
+            if ((items.get(position).getMediaType()!= null && items.get(position).getMediaType().contains("image")) || !items.get(position).hasMedia() || items.get(position).getDescription().length() > 70) {
 
                 Intent details = new Intent(this, FeedDetails.class);
                 Bundle store = new Bundle();
@@ -867,7 +878,8 @@ public class NewsPlugin extends AppBuilderModuleMain {
                 }
             }
 
-        } catch (Exception ex) { 
+        } catch (Exception ex) { // Error Logging
+            ex.printStackTrace();
         }
     }
 
@@ -878,7 +890,7 @@ public class NewsPlugin extends AppBuilderModuleMain {
         int bgColor = Statics.color1;
 
         for (int i = 0; i < listView.getChildCount(); i++) {
-            if (i == 0 && Statics.isRSS) {
+            if (i == 0 && /*isRSS*/Statics.isRSS) {
             } else {
                 View itemView = ((ViewGroup) listView.getChildAt(i)).getChildAt(0);
                 itemView.setBackgroundColor(bgColor);

@@ -33,10 +33,12 @@
     <string name="discription">Описание</string>
     <string name="rss_back_button">Назад</string>
     <string name="rss_home_button">Домой</string>
-    <string name="news_add_event_to_calendar">Добавить событие в календарь</string>
+    <string name="news_add_event_to_calendar">В календарь</string>
     <string name="news_share_event_via_sms">Поделиться через СМС</string>
     <string name="news_share_event_via_email">Поделиться через Email</string>
     <string name="news_menu_cancel">Отмена</string>
 
     <string name="rss_no_items">В rss отсутствуют записи</string>
+    <string name="rss_list_share">Поделиться</string>
+    <string name="choose_email_client">Выберите Email клиент</string>
 </resources>

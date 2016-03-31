@@ -143,7 +143,14 @@ public class FeedItem implements Serializable {
      * @return 
      */
     public String getAnounce(int length) {
-
+        /*if (length == 0) {
+            return anounce;
+        } else {
+            if (length > 30) {
+                length -= 3;
+            }
+            return (anounce.length() > length) ? anounce.substring(0, length) + "..." : anounce;
+        }*/
         return anounce;
     }
 
@@ -244,13 +251,20 @@ public class FeedItem implements Serializable {
                 if (dateformat == 1) {
                     SimpleDateFormat sdf;
 
-                    sdf = new SimpleDateFormat("dd MMM yyyy HH:mm");
+                    /*if (Locale.getDefault().toString().equals("en_US")) {
+                        sdf = new SimpleDateFormat("MMM dd yyyy hh:mm a");
+                    } else {*/
+                        sdf = new SimpleDateFormat("dd MMM yyyy HH:mm");
+                    //}
                     result.append(sdf.format(pubdate));
                 } else {
                     SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy hh:mm a");
 
-                    sdf = new SimpleDateFormat("MMM dd yyyy hh:mm a");
-
+                    //if (Locale.getDefault().toString().equals("en_US")) {
+                        sdf = new SimpleDateFormat("MMM dd yyyy hh:mm a");
+                    /*} else {
+                        sdf = new SimpleDateFormat("dd MMM yyyy HH:mm");
+                    }*/
                     result.append(sdf.format(pubdate));
                 }
                 return result.toString();
@@ -377,6 +391,7 @@ public class FeedItem implements Serializable {
      * @param value date format to set 1 - 24 hours format, 0 - 12 hours format
      */
     synchronized public void setDateFormat(int value) {
+        //dateformat = (value != 0 || value != 1) ? 0 : 1;
         switch(value){
             case 0:
             case 1:

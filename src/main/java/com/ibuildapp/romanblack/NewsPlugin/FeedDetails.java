@@ -1,13 +1,13 @@
 /****************************************************************************
-*                                                                           *
-*  Copyright (C) 2014-2015 iBuildApp, Inc. ( http://ibuildapp.com )         *
-*                                                                           *
-*  This file is part of iBuildApp.                                          *
-*                                                                           *
-*  This Source Code Form is subject to the terms of the iBuildApp License.  *
-*  You can obtain one at http://ibuildapp.com/license/                      *
-*                                                                           *
-****************************************************************************/
+ *                                                                           *
+ *  Copyright (C) 2014-2015 iBuildApp, Inc. ( http://ibuildapp.com )         *
+ *                                                                           *
+ *  This file is part of iBuildApp.                                          *
+ *                                                                           *
+ *  This Source Code Form is subject to the terms of the iBuildApp License.  *
+ *  You can obtain one at http://ibuildapp.com/license/                      *
+ *                                                                           *
+ ****************************************************************************/
 package com.ibuildapp.romanblack.NewsPlugin;
 
 import android.app.AlertDialog;
@@ -26,6 +26,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.Telephony;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.Display;
@@ -36,9 +37,12 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 import com.appbuilder.sdk.android.AppBuilderModuleMain;
+import com.appbuilder.sdk.android.DialogSharing;
+import com.appbuilder.sdk.android.Utils;
 import com.appbuilder.sdk.android.Widget;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -55,7 +59,7 @@ import java.util.Locale;
 /**
  * This Activity represents rss item or event details.
  */
-public class FeedDetails extends AppBuilderModuleMain implements View.OnClickListener {
+public class FeedDetails extends AppBuilderModuleMain {
 
     private int screenWidth;
 
@@ -130,6 +134,8 @@ public class FeedDetails extends AppBuilderModuleMain implements View.OnClickLis
             }
         }
 
+        func = store.getString("func");
+
         setTopBarLeftButtonText(getString(R.string.rss_back_button), true, new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -137,6 +143,72 @@ public class FeedDetails extends AppBuilderModuleMain implements View.OnClickLis
             }
         });
 
+        if (!(!widget.hasParameter("send_mail")
+                && !widget.hasParameter("send_sms")
+                && (!func.equals("events") || !widget.hasParameter("add_event")))) {
+            ImageView shareButton = (ImageView) getLayoutInflater().inflate(R.layout.romanblack_rss_share_btn, null);
+            shareButton.setLayoutParams(new LinearLayout.LayoutParams((int) (29 * getResources().getDisplayMetrics().density), (int) (39 * getResources().getDisplayMetrics().density)));
+            shareButton.setColorFilter(navBarDesign.itemDesign.textColor);
+            setTopBarRightButton(shareButton, getString(R.string.rss_list_share), new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    DialogSharing.Configuration.Builder sharingDialogBuilder = new DialogSharing.Configuration.Builder();
+
+                    if (func.equals("events") && widget.hasParameter("add_event")) {
+                        sharingDialogBuilder.addCustomListener(R.string.news_add_event_to_calendar, R.drawable.add_to_calendar, true, new DialogSharing.Item.OnClickListener() {
+                            @Override
+                            public void onClick() {
+                                addToCalendar(item.getPubdate().getTime(), item.getTitle());
+                            }
+                        });
+                    }
+
+                    if (widget.hasParameter("send_sms")) {
+                        sharingDialogBuilder.setSmsSharingClickListener(new DialogSharing.Item.OnClickListener() {
+                            @Override
+                            public void onClick() {
+                                String message = item.getTitle();
+                                message = message + "\n" + html2text(item.getDescription());
+
+                                try {
+                                    Utils.sendSms(FeedDetails.this, message);
+                                } catch (ActivityNotFoundException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+                    }
+
+                    if (widget.hasParameter("send_mail")) {
+                        sharingDialogBuilder.setEmailSharingClickListener(new DialogSharing.Item.OnClickListener() {
+                            @Override
+                            public void onClick() {
+                                SimpleDateFormat sdf = null;
+
+                                StringBuilder message = new StringBuilder();
+
+                                if (Locale.getDefault().toString().equals("en_US")) {
+                                    sdf = new SimpleDateFormat("MMMM dd yyyy hh:mm");
+                                } else {
+                                    sdf = new SimpleDateFormat("dd MMMM yyyy HH:mm");
+                                }
+
+
+                                message.append(sdf.format(item.getPubdate()));
+                                message.append("\n");
+                                message.append(html2text(item.getDescription()));
+
+                                Intent email = new Intent(Intent.ACTION_SEND);
+                                email.putExtra(Intent.EXTRA_SUBJECT, item.getTitle());
+                                email.putExtra(Intent.EXTRA_TEXT, message.toString());
+                                email.setType("message/rfc822");
+                                startActivity(Intent.createChooser(email, getString(R.string.choose_email_client)));
+                            }
+                        });
+                    }showDialogSharing(sharingDialogBuilder.build());
+                }
+            });
+        }
         ConnectivityManager cm = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo ni = cm.getActiveNetworkInfo();
         if (ni != null && ni.isConnectedOrConnecting()) {
@@ -152,44 +224,44 @@ public class FeedDetails extends AppBuilderModuleMain implements View.OnClickLis
             hm.put("frequency", "FREQ=ONCE");
             addNativeFeature(NATIVE_FEATURES.ADD_EVENT, null, hm);
         }
-        if (widget.hasParameter("send_sms")) {
-            HashMap<String, String> hm = new HashMap<String, String>();
-            StringBuilder sb = new StringBuilder();
-            sb.append(item.getTitle());
-            sb.append(", ");
-            if (item.getPubdate("").length() > 0) {
-                sb.append(item.getPubdate(""));
+        if (widget.hasParameter("send_sms"))
+            if (widget.hasParameter("send_mail")) {{
+                HashMap<String, String> hm = new HashMap<String, String>();
+                StringBuilder sb = new StringBuilder();
+                sb.append(item.getTitle());
                 sb.append(", ");
+                if (item.getPubdate("").length() > 0) {
+                    sb.append(item.getPubdate(""));
+                    sb.append(", ");
+                }
+                sb.append(item.getAnounce(0));
+                hm.put("text", sb.toString());
+                addNativeFeature(NATIVE_FEATURES.SMS, null, hm);
             }
-            sb.append(item.getAnounce(0));
-            hm.put("text", sb.toString());
-            addNativeFeature(NATIVE_FEATURES.SMS, null, hm);
-        }
-        if (widget.hasParameter("send_mail")) {
-            HashMap<String, CharSequence> hm = new HashMap<String, CharSequence>();
-            hm.put("subject", item.getTitle());
+                HashMap<String, CharSequence> hm = new HashMap<String, CharSequence>();
+                hm.put("subject", item.getTitle());
 
-            StringBuilder sb = new StringBuilder();
-            sb.append(item.getTitle());
-            sb.append("<br>\n");
-            if (item.getPubdate("").length() > 0) {
-                sb.append("");
-                sb.append(item.getPubdate(""));
+                StringBuilder sb = new StringBuilder();
+                sb.append(item.getTitle());
                 sb.append("<br>\n");
+                if (item.getPubdate("").length() > 0) {
+                    sb.append("");
+                    sb.append(item.getPubdate(""));
+                    sb.append("<br>\n");
+                }
+                sb.append(item.getAnounce(0));
+                if (widget.isHaveAdvertisement()) {
+                    sb.append("<br/><br/>\n (sent from <a href=\"http://ibuildapp.com\">iBuildApp</a>)");
+                }
+                hm.put("text", sb.toString());
+                addNativeFeature(NATIVE_FEATURES.EMAIL, null, hm);
             }
-            sb.append(item.getAnounce(0));
-            if (widget.isHaveAdvertisement()) {
-                sb.append("<br/><br/>\n (sent from <a href=\"http://ibuildapp.com\">iBuildApp</a>)");
-            }
-            hm.put("text", sb.toString());
-            addNativeFeature(NATIVE_FEATURES.EMAIL, null, hm);
-        }
-
-        func = store.getString("func");
 
         webView = (WebView) findViewById(R.id.romanblack_rss_feedDetails);
         webView.getSettings().setJavaScriptEnabled(true);
+        //webView.getSettings().setPluginsEnabled(true);
         webView.getSettings().setBuiltInZoomControls(true);
+        //webView.getSettings().setPluginsEnabled(true);
         webView.getSettings().setLoadsImagesAutomatically(true);
         webView.clearHistory();
 
@@ -313,7 +385,7 @@ public class FeedDetails extends AppBuilderModuleMain implements View.OnClickLis
             } else {
                 sdf = new SimpleDateFormat("dd MMMM yyyy HH:mm");
             }
-            
+
             if(Statics.isRSS){
                 html.append("<div style=\"overflow:hidden;\">");
                 html.append("<style>a { text-decoration: none; color:#3399FF;}</style>");
@@ -322,13 +394,13 @@ public class FeedDetails extends AppBuilderModuleMain implements View.OnClickLis
                 html.append("</span><br/>");
                 if (item.getPubdate() != null) {
                     html.append("<span style='font-family:Helvetica; font-size:12px;  color:#555555;'' >");
-                    
+
                     if (widget.getDateFormat() == 0) {
                         html.append(sdf.format(item.getPubdate()));
                     } else {
                         html.append(sdf.format(item.getPubdate()));
                     }
-                    
+
                     html.append("</span><br/>");
                 }
                 html.append("<br/>");
@@ -342,13 +414,13 @@ public class FeedDetails extends AppBuilderModuleMain implements View.OnClickLis
                 html.append("</span><br/>");
                 if (item.getPubdate() != null) {
                     html.append("<span style='font-family:Helvetica; font-size:12px;  color:#555555;'' >");
-                    
+
                     if (widget.getDateFormat() == 0) {
                         html.append(sdf.format(item.getPubdate()));
                     } else {
                         html.append(sdf.format(item.getPubdate()));
                     }
-                    
+
                     html.append("</span><br />");
                 }
                 html.append("<br />");
@@ -359,7 +431,7 @@ public class FeedDetails extends AppBuilderModuleMain implements View.OnClickLis
                 }
                 html.append(item.getDescription());
             }
-            
+
             if (item.getLink().length() > 0) {
                 html.append("<br/><a href=\"");
                 html.append(item.getLink());
@@ -381,51 +453,11 @@ public class FeedDetails extends AppBuilderModuleMain implements View.OnClickLis
         }
     }
 
-    /**
-     * Show sharing dialog instead standart menu
-     * @param menu
-     * @return true
-     */
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-        LayoutInflater layoutInflater = getLayoutInflater();
-        View view = (LinearLayout) layoutInflater.inflate(R.layout.news_sharing_dialog, null);
-
-        Button buttonAddToCalendar = (Button) view.findViewById(R.id.menu_button_add_to_calendar);
-        Button buttonShareViaEmail = (Button) view.findViewById(R.id.menu_button_share_via_email);
-        Button buttonShareViaSMS = (Button) view.findViewById(R.id.menu_button_share_via_sms);
-        Button buttonCancel = (Button) view.findViewById(R.id.menu_button_cancel);
-
-        if (!func.equals("events") || !widget.hasParameter("add_event")) {
-            buttonAddToCalendar.setVisibility(View.GONE);
-        }
-
-        if (!widget.hasParameter("send_sms")) {
-            buttonShareViaSMS.setVisibility(View.GONE);
-        }
-
-        if (!widget.hasParameter("send_mail")) {
-            buttonShareViaEmail.setVisibility(View.GONE);
-        }
-
-
-        buttonAddToCalendar.setOnClickListener(this);
-        buttonShareViaEmail.setOnClickListener(this);
-        buttonShareViaSMS.setOnClickListener(this);
-        buttonCancel.setOnClickListener(this);
-
-        builder.setView(view);
-        ad = builder.create();
-        if (!(!widget.hasParameter("send_mail")
-                && !widget.hasParameter("send_sms")
-                && (!func.equals("events") || !widget.hasParameter("add_event")))) {
-            ad.show();
-        }
-
-
-        return true;
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        return false;
     }
+
 
     @Override
     public void resume() {
@@ -490,7 +522,7 @@ public class FeedDetails extends AppBuilderModuleMain implements View.OnClickLis
         ContentUris.appendId(builder, time + 10 * 60 * 1000);
 
         String[] projection = new String[]{
-            "title", "begin"};
+                "title", "begin"};
         Cursor cursor = cr.query(builder.build(),
                 projection, null, null, null);
 
@@ -533,6 +565,7 @@ public class FeedDetails extends AppBuilderModuleMain implements View.OnClickLis
         }
     }
 
+    /* PRIVATE METHODS */
     private void showProgress() {
         if (state == states.LOAD_START) {
             state = states.LOAD_PROGRESS;
@@ -569,47 +602,6 @@ public class FeedDetails extends AppBuilderModuleMain implements View.OnClickLis
      */
     public static String html2text(String html) {
         return Jsoup.parse(html).text();
-    }
-
-    @Override
-    public void onClick(View view) {
-        if (view.getId() == R.id.menu_button_add_to_calendar) {
-            addToCalendar(item.getPubdate().getTime(), item.getTitle());
-            ad.cancel();
-        } else if (view.getId() == R.id.menu_button_share_via_email) {
-            SimpleDateFormat sdf = null;
-
-            StringBuilder message = new StringBuilder();
-
-            if (Locale.getDefault().toString().equals("en_US")) {
-                sdf = new SimpleDateFormat("MMMM dd yyyy hh:mm");
-            } else {
-                sdf = new SimpleDateFormat("dd MMMM yyyy HH:mm");
-            }
-
-
-            message.append(sdf.format(item.getPubdate()));
-            message.append("\n");
-            message.append(html2text(item.getDescription()));
-
-            Intent email = new Intent(Intent.ACTION_SEND);
-            email.putExtra(Intent.EXTRA_SUBJECT, item.getTitle());
-            email.putExtra(Intent.EXTRA_TEXT, message.toString());
-            email.setType("message/rfc822");
-            startActivity(Intent.createChooser(email, "Choose an Email client"));
-            ad.cancel();
-        } else if (view.getId() == R.id.menu_button_share_via_sms) {
-            Intent smsIntent = new Intent(Intent.ACTION_VIEW);
-            String message = item.getTitle();
-            message = message + "\n" + html2text(item.getDescription());
-            smsIntent.putExtra("sms_body", message);
-            smsIntent.putExtra("address", "");
-            smsIntent.setType("vnd.android-dir/mms-sms");
-            startActivity(smsIntent);
-            ad.cancel();
-        } else if (view.getId() == R.id.menu_button_cancel) {
-            ad.cancel();
-        }
     }
 
     private String pastImgStyleTag(String pHTML) {

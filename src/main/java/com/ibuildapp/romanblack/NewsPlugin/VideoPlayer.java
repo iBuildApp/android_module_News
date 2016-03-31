@@ -1,13 +1,13 @@
 /****************************************************************************
-*                                                                           *
-*  Copyright (C) 2014-2015 iBuildApp, Inc. ( http://ibuildapp.com )         *
-*                                                                           *
-*  This file is part of iBuildApp.                                          *
-*                                                                           *
-*  This Source Code Form is subject to the terms of the iBuildApp License.  *
-*  You can obtain one at http://ibuildapp.com/license/                      *
-*                                                                           *
-****************************************************************************/
+ *                                                                           *
+ *  Copyright (C) 2014-2015 iBuildApp, Inc. ( http://ibuildapp.com )         *
+ *                                                                           *
+ *  This file is part of iBuildApp.                                          *
+ *                                                                           *
+ *  This Source Code Form is subject to the terms of the iBuildApp License.  *
+ *  You can obtain one at http://ibuildapp.com/license/                      *
+ *                                                                           *
+ ****************************************************************************/
 package com.ibuildapp.romanblack.NewsPlugin;
 
 import android.app.ProgressDialog;
@@ -166,7 +166,7 @@ public class VideoPlayer extends AppBuilderModule implements SurfaceHolder.Callb
     @Override
     public void create() {
 
-        try {
+        try {//ErrorLogging
 
             requestWindowFeature(Window.FEATURE_NO_TITLE);
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -407,7 +407,7 @@ public class VideoPlayer extends AppBuilderModule implements SurfaceHolder.Callb
                 }
             });
 
-        } catch (Exception e) {
+        } catch (Exception e) {//ErrorLogging
         }
     }
 
@@ -444,7 +444,11 @@ public class VideoPlayer extends AppBuilderModule implements SurfaceHolder.Callb
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
     }
-    
+
+    /* PRIVATE METHODS */
+
+    /* controls methods */
+
     /**
      * Check if need to hide player controls.
      */
@@ -552,7 +556,7 @@ public class VideoPlayer extends AppBuilderModule implements SurfaceHolder.Callb
      * Prepares to play MediaPlayer and start it.
      */
     private void startVideoPlayer() {
-        try {
+        try {//ErrorLogging
 
             boolean waitForDownload = false;
             boolean hasCache = false;
@@ -633,7 +637,7 @@ public class VideoPlayer extends AppBuilderModule implements SurfaceHolder.Callb
      * Downloads file to devise external storage.
      */
     private void downloadFile() {
-        try {
+        try {//ErrorLogging
 
             if (!checkInternetConnection()) {
                 handler.sendEmptyMessage(DOWNLOAD_ERROR);
@@ -705,12 +709,12 @@ public class VideoPlayer extends AppBuilderModule implements SurfaceHolder.Callb
                     } catch (IOException e) {
                         handler.sendEmptyMessage(DOWNLOAD_ERROR);
                         return; // swallow a 404
-                    } catch (Exception e) {
+                    } catch (Exception e) {//ErrorLogging
                     }
                 }
             }.start();
 
-        } catch (Exception e) {
+        } catch (Exception e) {//ErrorLogging
         }
     }
 }

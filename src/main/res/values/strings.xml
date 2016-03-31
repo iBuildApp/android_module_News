@@ -39,10 +39,12 @@
     <string name="close">Close</string>
     <string name="description">Description</string>
     <string name="discription">Description</string>
-    <string name="news_add_event_to_calendar">Add Event to Calendar</string>
+    <string name="news_add_event_to_calendar">Calendar</string>
     <string name="news_share_event_via_email">Share Event via Email</string>
     <string name="news_share_event_via_sms">Share Event via SMS</string>
     <string name="news_menu_cancel">Cancel</string>
 
     <string name="rss_no_items">Rss has no items</string>
+    <string name="rss_list_share">Share</string>
+    <string name="choose_email_client">Choose an Email client</string>
 </resources>
