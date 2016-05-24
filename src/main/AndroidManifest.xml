@@ -13,6 +13,7 @@
         <activity android:name="EventsNotification"/>
         <activity android:name="EventsNotificationView"/>
         <activity android:name="NotificationDetails"/>
+        <activity android:name=".VideoPlayer"/>
     </application>
 
 </manifest>
