@@ -10,8 +10,13 @@
  ****************************************************************************/
 package com.ibuildapp.romanblack.NewsPlugin;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.http.SslError;
+import android.webkit.SslErrorHandler;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.TextView;
 import com.appbuilder.sdk.android.AppBuilderModule;
 import java.io.UnsupportedEncodingException;
@@ -34,7 +39,27 @@ public class NotificationDetails extends AppBuilderModule {
         titleText = (TextView) findViewById(R.id.romanblack_feed_title);
         dateText = (TextView) findViewById(R.id.romanblack_feed_date);
         descriptionText = (WebView) findViewById(R.id.romanblack_feed_description);
-
+        descriptionText.setWebViewClient(new WebViewClient(){
+            @Override
+            public void onReceivedSslError(WebView view, final SslErrorHandler handler, SslError error) {
+                final AlertDialog.Builder builder = new AlertDialog.Builder(NotificationDetails.this);
+                builder.setMessage(R.string.notification_error_ssl_cert_invalid);
+                builder.setPositiveButton(NotificationDetails.this.getResources().getString(R.string.on_continue), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        handler.proceed();
+                    }
+                });
+                builder.setNegativeButton(NotificationDetails.this.getResources().getString(R.string.on_cancel), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        handler.cancel();
+                    }
+                });
+                final AlertDialog dialog = builder.create();
+                dialog.show();
+            }
+        });
         Intent parent = getIntent();
         String title = parent.getStringExtra("TITLE");
         String date = parent.getStringExtra("DATE");
