@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingTop="10dp"
+                android:paddingBottom="15dp"
+                android:gravity="center"
+                android:id="@+id/news_pull_to_refresh_header"
+                android:background="#FFF">
+            
+    <ProgressBar android:id="@+id/news_pull_to_refresh_header_progress"
+                 android:indeterminate="true"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:layout_marginLeft="30dp"
+                 android:layout_marginRight="20dp"
+                 android:layout_marginTop="10dp"
+                 android:visibility="gone"
+                 android:layout_centerVertical="true"
+                 style="?android:attr/progressBarStyleSmall"/>
+        
+    <ImageView android:id="@+id/news_pull_to_refresh_header_image"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_marginLeft="30dp"
+               android:layout_marginRight="20dp"
+               android:visibility="gone"
+               android:layout_gravity="center"
+               android:gravity="center"
+               android:src="@drawable/news_pull_to_refresh_arrow"/>
+        
+    <TextView android:id="@+id/news_pull_to_refresh_header_text"
+              android:text="@string/news_tap_to_refresh"
+              android:textAppearance="?android:attr/textAppearanceMedium"
+              android:textStyle="bold"
+              android:paddingTop="5dp"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_gravity="center"
+              android:gravity="center"
+              android:textColor="#666666"/>
+        
+    <TextView android:id="@+id/romanblack_rss_pull_to_refresh_updated_at"
+              android:layout_below="@+id/news_pull_to_refresh_header_text"
+              android:visibility="gone"
+              android:textAppearance="?android:attr/textAppearanceSmall"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_gravity="center"
+              android:gravity="center"/>
+        
+</RelativeLayout>

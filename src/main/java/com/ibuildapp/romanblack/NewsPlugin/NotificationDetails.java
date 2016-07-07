@@ -34,23 +34,23 @@ public class NotificationDetails extends AppBuilderModule {
 
     @Override
     public void create() {
-        setContentView(R.layout.romanblack_notification_details);
+        setContentView(R.layout.news_notification_details);
 
-        titleText = (TextView) findViewById(R.id.romanblack_feed_title);
-        dateText = (TextView) findViewById(R.id.romanblack_feed_date);
-        descriptionText = (WebView) findViewById(R.id.romanblack_feed_description);
+        titleText = (TextView) findViewById(R.id.news_notification_details_title);
+        dateText = (TextView) findViewById(R.id.news_notification_details_date);
+        descriptionText = (WebView) findViewById(R.id.news_notification_details_description);
         descriptionText.setWebViewClient(new WebViewClient(){
             @Override
             public void onReceivedSslError(WebView view, final SslErrorHandler handler, SslError error) {
                 final AlertDialog.Builder builder = new AlertDialog.Builder(NotificationDetails.this);
-                builder.setMessage(R.string.notification_error_ssl_cert_invalid);
-                builder.setPositiveButton(NotificationDetails.this.getResources().getString(R.string.on_continue), new DialogInterface.OnClickListener() {
+                builder.setMessage(R.string.news_notification_error_ssl_cert_invalid);
+                builder.setPositiveButton(NotificationDetails.this.getResources().getString(R.string.news_on_continue), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         handler.proceed();
                     }
                 });
-                builder.setNegativeButton(NotificationDetails.this.getResources().getString(R.string.on_cancel), new DialogInterface.OnClickListener() {
+                builder.setNegativeButton(NotificationDetails.this.getResources().getString(R.string.news_on_cancel), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         handler.cancel();

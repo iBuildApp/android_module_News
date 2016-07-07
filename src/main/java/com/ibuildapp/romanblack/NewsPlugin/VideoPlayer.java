@@ -30,20 +30,23 @@ import android.util.Log;
 import android.view.*;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
-import android.widget.ImageView;
 import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.Toast;
-import com.appbuilder.sdk.android.AppBuilderModule;
+import com.appbuilder.sdk.android.AppBuilderModuleMainAppCompat;
 import com.appbuilder.sdk.android.Utils;
 
 import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 /**
  * This class used to play video if RSS item contains media video link
  */
-public class VideoPlayer extends AppBuilderModule implements SurfaceHolder.Callback {
+public class VideoPlayer extends AppBuilderModuleMainAppCompat implements SurfaceHolder.Callback {
 
     private String videoUrl = "";
     private String cachePath = "";
@@ -59,20 +62,24 @@ public class VideoPlayer extends AppBuilderModule implements SurfaceHolder.Callb
     private AudioManager audioManager = null;
     private int audioVolume = 0;
     private int videoCurrentPos = 0;
+
     private SeekBar seekBar = null;
-    private ImageView btnPlay = null;
-    private ImageView btnStop = null;
-    private ImageView btnNext = null;
-    private ImageView btnPrev = null;
+    private View playButton;
+    private View pauseButton;
+
+    private View playLayout;
+    private View controlsLayout;
+    private TextView durationPositiveTextView;
+    private TextView durationNegativeTextView;
+
     private int btnActive = 0;
     private TelephonyManager telephonyManager = null;
     private boolean isTouchSeekBar = false;
     private ProgressDialog progressDialog;
     private long downloadFileSize = 0;
     final private int VIDEO_PLAYER_ERROR = 0;
-    ;
+
     final private int VIDEO_PLAYER_START = 2;
-    final private int VIDEO_PLAYER_PAUSE = 3;
     final private int DOWNLOAD_START = 10;
     final private int DOWNLOAD_UPDATE = 11;
     final private int DOWNLOAD_COMPLETE = 5;
@@ -89,9 +96,6 @@ public class VideoPlayer extends AppBuilderModule implements SurfaceHolder.Callb
             switch (message.what) {
                 case VIDEO_PLAYER_START: {
                     startVideoPlayer();
-                }
-                break;
-                case VIDEO_PLAYER_PAUSE: {
                 }
                 break;
                 case VIDEO_PLAYER_ERROR: {
@@ -167,11 +171,9 @@ public class VideoPlayer extends AppBuilderModule implements SurfaceHolder.Callb
     public void create() {
 
         try {//ErrorLogging
+            setContentView(R.layout.news_details_video_player);
 
-            requestWindowFeature(Window.FEATURE_NO_TITLE);
-            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
-            setContentView(R.layout.romanblack_rss_media_videoplayer);
+            hideTopBar();
 
             Intent currentIntent = getIntent();
             Bundle store = currentIntent.getExtras();
@@ -194,7 +196,8 @@ public class VideoPlayer extends AppBuilderModule implements SurfaceHolder.Callb
                             break;
                         case TelephonyManager.CALL_STATE_RINGING:
                             if (VideoPlayer.this.state == statePlay) {
-                                btnPlay.setImageResource(R.drawable.romanblack_rss_icon_play);
+                                playButton.setVisibility(View.VISIBLE);
+                                pauseButton.setVisibility(View.INVISIBLE);
                                 mediaPlayer.pause();
                                 VideoPlayer.this.state = statePause;
                             }
@@ -205,13 +208,12 @@ public class VideoPlayer extends AppBuilderModule implements SurfaceHolder.Callb
             }, PhoneStateListener.LISTEN_CALL_STATE);
 
             File cache = new File(cachePath);
-            if (!cache.exists()) {
+            if (!cache.exists())
                 cache.mkdirs();
-            }
 
             cachePath += "/" + Utils.md5(videoUrl) + videoUrl.substring(videoUrl.lastIndexOf("."));
 
-            surfaceView = (SurfaceView) findViewById(R.id.romanblack_rss_videoPlayer);
+            surfaceView = (SurfaceView) findViewById(R.id.news_details_video_view);
             surfaceHolder = surfaceView.getHolder();
             surfaceHolder.addCallback(this);
             surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
@@ -236,9 +238,9 @@ public class VideoPlayer extends AppBuilderModule implements SurfaceHolder.Callb
                     if (sourceType == sourceUrl) {
                         sourceType = sourceCache;
                         downloadFile();
-                    } else {
+                    } else
                         handler.sendEmptyMessage(VIDEO_PLAYER_ERROR);
-                    }
+
                     return true;
                 }
             });
@@ -248,7 +250,9 @@ public class VideoPlayer extends AppBuilderModule implements SurfaceHolder.Callb
                 public void onCompletion(MediaPlayer mp) {
                     videoCurrentPos = 0;
                     state = statePause;
-                    btnPlay.setImageResource(R.drawable.romanblack_rss_icon_play);
+                    playButton.setVisibility(View.VISIBLE);
+                    pauseButton.setVisibility(View.INVISIBLE);
+
                     mp.seekTo(videoCurrentPos);
                     handler.sendEmptyMessage(SHOW_CONTROLS);
                 }
@@ -287,14 +291,12 @@ public class VideoPlayer extends AppBuilderModule implements SurfaceHolder.Callb
                     lp.height = playerHeight;
                     surfaceView.setLayoutParams(lp);
 
-                    if (videoCurrentPos > 0) {
+                    if (videoCurrentPos > 0)
                         handler.sendEmptyMessage(UPDATE_SEEK_BAR);
-                    }
+
                     if (state == statePlay) {
                         btnActive = 5;
                         handler.sendEmptyMessage(CHECK_CONTROLS_STATE);
-                    } else {
-                        Toast.makeText(VideoPlayer.this, R.string.romanblack_rss_alert_video_press_play, Toast.LENGTH_LONG).show();
                     }
                     mp.seekTo(videoCurrentPos);
                 }
@@ -304,18 +306,18 @@ public class VideoPlayer extends AppBuilderModule implements SurfaceHolder.Callb
                 @Override
                 public void onSeekComplete(MediaPlayer mp) {
                     audioVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-                    if (state == statePause) {
+                    if (state == statePause)
                         audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, 0, 0);
-                    }
                     mp.start();
                     new Handler().postDelayed(new Runnable() {
                         public void run() {
                             audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, audioVolume, 0);
                             try {
-                                if (state == statePause) {
+                                if (state == statePause)
                                     mediaPlayer.pause();
-                                }
+
                             } catch (Exception e) {
+                                e.printStackTrace();
                             }
                         }
                     }, 256);
@@ -327,7 +329,7 @@ public class VideoPlayer extends AppBuilderModule implements SurfaceHolder.Callb
                 }
             });
 
-            seekBar = (SeekBar) findViewById(R.id.romanblack_rss_seekBar);
+            seekBar = (SeekBar) findViewById(R.id.news_details_video_seek_bar);
             seekBar.setOnTouchListener(new OnTouchListener() {
                 @Override
                 public boolean onTouch(View view, MotionEvent event) {
@@ -344,19 +346,30 @@ public class VideoPlayer extends AppBuilderModule implements SurfaceHolder.Callb
             });
             seekBar.setVisibility(View.INVISIBLE);
 
-            btnPlay = (ImageView) findViewById(R.id.romanblack_rss_btnPlay);
+            playButton = findViewById(R.id.news_details_video_play);
+            pauseButton = findViewById(R.id.news_details_video_pause);
+            playLayout = findViewById(R.id.news_details_video_play_layout);
+
+            durationPositiveTextView = (TextView) findViewById(R.id.news_details_video_duration);
+            durationNegativeTextView = (TextView) findViewById(R.id.news_details_video_negative_duration);
+
+            controlsLayout = findViewById(R.id.news_details_video_controls_layout);
+
             if (state == statePlay) {
-                btnPlay.setImageResource(R.drawable.romanblack_rss_icon_pause);
+                playButton.setVisibility(View.INVISIBLE);
+                pauseButton.setVisibility(View.VISIBLE);
             }
-            btnPlay.setOnClickListener(new OnClickListener() {
+            playLayout.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (state == statePlay) {
-                        btnPlay.setImageResource(R.drawable.romanblack_rss_icon_play);
+                        playButton.setVisibility(View.VISIBLE);
+                        pauseButton.setVisibility(View.INVISIBLE);
                         mediaPlayer.pause();
                         state = statePause;
                     } else if (state == statePause) {
-                        btnPlay.setImageResource(R.drawable.romanblack_rss_icon_pause);
+                        playButton.setVisibility(View.INVISIBLE);
+                        pauseButton.setVisibility(View.VISIBLE);
                         mediaPlayer.start();
                         state = statePlay;
                         handler.sendEmptyMessage(CHECK_CONTROLS_STATE);
@@ -365,62 +378,9 @@ public class VideoPlayer extends AppBuilderModule implements SurfaceHolder.Callb
                 }
             });
 
-            btnStop = (ImageView) findViewById(R.id.romanblack_rss_btnStop);
-            btnStop.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    btnPlay.setImageResource(R.drawable.romanblack_rss_icon_play);
-                    state = statePause;
-                    mediaPlayer.pause();
-                    mediaPlayer.seekTo(0);
-                }
-            });
-
-            btnNext = (ImageView) findViewById(R.id.romanblack_rss_btnNext);
-            btnNext.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int videoDuration = mediaPlayer.getDuration();
-                    videoCurrentPos = mediaPlayer.getCurrentPosition() + 5000;
-                    if (videoCurrentPos > videoDuration - 256) {
-                        videoCurrentPos = videoDuration - 256;
-                    }
-                    mediaPlayer.seekTo(videoCurrentPos);
-                    if (state == statePause) {
-                        handler.sendEmptyMessage(UPDATE_SEEK_BAR);
-                    }
-                }
-            });
-
-            btnPrev = (ImageView) findViewById(R.id.romanblack_rss_btnPrev);
-            btnPrev.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    videoCurrentPos = mediaPlayer.getCurrentPosition() - 5000;
-                    if (videoCurrentPos < 0) {
-                        videoCurrentPos = 0;
-                    }
-                    mediaPlayer.seekTo(videoCurrentPos);
-                    if (state == statePause) {
-                        handler.sendEmptyMessage(UPDATE_SEEK_BAR);
-                    }
-                }
-            });
-
-        } catch (Exception e) {//ErrorLogging
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-    }
-
-    @Override
-    public void start() {
-    }
-
-    @Override
-    public void restart() {
-    }
-
-    @Override
-    public void resume() {
     }
 
     @Override
@@ -445,10 +405,6 @@ public class VideoPlayer extends AppBuilderModule implements SurfaceHolder.Callb
     public void surfaceDestroyed(SurfaceHolder holder) {
     }
 
-    /* PRIVATE METHODS */
-
-    /* controls methods */
-
     /**
      * Check if need to hide player controls.
      */
@@ -456,31 +412,24 @@ public class VideoPlayer extends AppBuilderModule implements SurfaceHolder.Callb
         if (btnActive > 0) {
             btnActive--;
             handler.sendEmptyMessageDelayed(CHECK_CONTROLS_STATE, 1000);
-        } else {
+        } else
             handler.sendEmptyMessageDelayed(HIDE_CONTROLS, 1000);
-        }
     }
 
     /**
      * Hides player controls.
      */
     private void hideControls() {
-        seekBar.setVisibility(View.INVISIBLE);
-        btnPlay.setVisibility(View.INVISIBLE);
-        btnStop.setVisibility(View.INVISIBLE);
-        btnNext.setVisibility(View.INVISIBLE);
-        btnPrev.setVisibility(View.INVISIBLE);
+        controlsLayout.setVisibility(View.INVISIBLE);
+        playLayout.setVisibility(View.INVISIBLE);
     }
 
     /**
      * Shows player controls.
      */
     private void showControls() {
-        seekBar.setVisibility(View.VISIBLE);
-        btnPlay.setVisibility(View.VISIBLE);
-        btnStop.setVisibility(View.VISIBLE);
-        btnNext.setVisibility(View.VISIBLE);
-        btnPrev.setVisibility(View.VISIBLE);
+        controlsLayout.setVisibility(View.VISIBLE);
+        playLayout.setVisibility(View.VISIBLE);
     }
 
     /**
@@ -493,11 +442,20 @@ public class VideoPlayer extends AppBuilderModule implements SurfaceHolder.Callb
                     seekBar.setProgress((int) (((float) mediaPlayer.getCurrentPosition() / mediaPlayer.getDuration()) * 100));
                 }
                 if (state == statePause && !isTouchSeekBar) {
-                    seekBar.setProgress((int) (((float) videoCurrentPos / mediaPlayer.getDuration()) * 100));
+                    seekBar.setProgress((int) (((float) mediaPlayer.getCurrentPosition() / mediaPlayer.getDuration()) * 100));
                 }
             } catch (Exception e) {
+                e.printStackTrace();
             }
 
+            int duration = mediaPlayer.getDuration();
+            int posit = mediaPlayer.getCurrentPosition();
+
+            Log.d("", "");
+
+            SimpleDateFormat sdf = new SimpleDateFormat("mm:ss", Locale.getDefault());
+            durationPositiveTextView.setText(sdf.format(new Date(posit)));
+            durationNegativeTextView.setText(sdf.format(new Date(duration - posit)));
             if (state == statePlay) {
                 handler.sendEmptyMessageDelayed(UPDATE_SEEK_BAR, 300);
             }
@@ -510,14 +468,14 @@ public class VideoPlayer extends AppBuilderModule implements SurfaceHolder.Callb
             try {
                 progressDialog = new ProgressDialog(this);
                 progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-                progressDialog.setMessage(getString(R.string.romanblack_rss_loading));
+                progressDialog.setMessage(getString(R.string.news_loading));
                 progressDialog.setProgress(0);
                 progressDialog.show();
                 handler.sendEmptyMessageDelayed(DOWNLOAD_UPDATE, 500);
             } catch (Exception ex) {
             }
         } else {
-            progressDialog = ProgressDialog.show(this, "", getString(R.string.romanblack_rss_loading), true);
+            progressDialog = ProgressDialog.show(this, "", getString(R.string.news_loading), true);
         }
         progressDialog.setCancelable(true);
         progressDialog.setOnCancelListener(new OnCancelListener() {
@@ -556,7 +514,7 @@ public class VideoPlayer extends AppBuilderModule implements SurfaceHolder.Callb
      * Prepares to play MediaPlayer and start it.
      */
     private void startVideoPlayer() {
-        try {//ErrorLogging
+        try {
 
             boolean waitForDownload = false;
             boolean hasCache = false;
@@ -569,16 +527,17 @@ public class VideoPlayer extends AppBuilderModule implements SurfaceHolder.Callb
                     downloadFileSize = conn.getContentLength();
                     sourceType = sourceCache;
 
-                    if (file.length() < downloadFileSize) {
+                    if (file.length() < downloadFileSize)
                         waitForDownload = true;
-                    }
+
                 } catch (Exception e) {
+                    e.printStackTrace();
                 }
             } else {
                 sourceType = sourceUrl;
             }
 
-            if (waitForDownload == true) {
+            if (waitForDownload) {
                 closeProgressDialog();
                 handler.sendEmptyMessage(DOWNLOAD_START);
             } else {
@@ -612,6 +571,7 @@ public class VideoPlayer extends AppBuilderModule implements SurfaceHolder.Callb
             }
 
         } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -628,7 +588,7 @@ public class VideoPlayer extends AppBuilderModule implements SurfaceHolder.Callb
         }
 
         if (!isOnline) {
-            Toast.makeText(this, R.string.romanblack_rss_alert_no_internet, 1000).show();
+            Toast.makeText(this, R.string.news_alert_no_internet, Toast.LENGTH_LONG).show();
         }
         return isOnline;
     }
@@ -703,18 +663,16 @@ public class VideoPlayer extends AppBuilderModule implements SurfaceHolder.Callb
                         bis.close();
 
                         handler.sendEmptyMessage(DOWNLOAD_COMPLETE);
-                    } catch (FileNotFoundException e) {
-                        handler.sendEmptyMessage(DOWNLOAD_ERROR);
-                        return; // swallow a 404
                     } catch (IOException e) {
                         handler.sendEmptyMessage(DOWNLOAD_ERROR);
-                        return; // swallow a 404
-                    } catch (Exception e) {//ErrorLogging
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
             }.start();
 
-        } catch (Exception e) {//ErrorLogging
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

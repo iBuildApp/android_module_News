@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/news_notification_screen_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/news_splash_screen"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_centerVertical="true"
+        android:layout_margin="15dp"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <com.appbuilder.core.PushNotification.AppPushNotificationPanel
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/news_notification_screen_previous"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_margin="5dp"
+                android:src="@drawable/news_icon_arrow_left"
+                android:visibility="invisible" />
+
+            <ImageView
+                android:id="@+id/news_notification_screen_next"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_margin="5dp"
+                android:src="@drawable/news_icon_arrow_right"
+                android:visibility="invisible" />
+
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/news_notification_screen_panel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/news_notification_screen_counter"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:gravity="center"
+                    android:text="@string/news_one_from_one"
+                    android:textColor="#FFF"
+                    android:textSize="13sp" />
+
+                <TextView
+                    android:id="@+id/news_notification_screen_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:paddingBottom="30dp"
+                    android:paddingLeft="35dp"
+                    android:paddingRight="35dp"
+                    android:text=""
+                    android:textColor="#FFF"
+                    android:textSize="20sp" />
+            </LinearLayout>
+
+        </com.appbuilder.core.PushNotification.AppPushNotificationPanel>
+
+        <LinearLayout
+            android:id="@+id/news_notification_screen_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/news_notification_screen_button_app"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:width="100dp"
+                android:gravity="center"
+                android:paddingBottom="0dp"
+                android:paddingTop="0dp"
+                android:text="@string/news_open_app" />
+
+            <Button
+                android:id="@+id/news_notification_screen_button_close"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:width="100dp"
+                android:gravity="center"
+                android:paddingBottom="0dp"
+                android:paddingTop="0dp"
+                android:text="@string/news_close" />
+
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>

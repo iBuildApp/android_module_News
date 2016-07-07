@@ -1,54 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">RReePPLLaaCCee</string>
+    <string name="news_from">from</string>
+    <string name="news_at">at</string>
+    <string name="news_reverse">Reverse</string>
+    <string name="news_refresh">Refresh</string>
+    <string name="news_yes">Yes</string>
+    <string name="news_no">No</string>
 
-    <string name="romanblack_rss_from">from</string>
-    <string name="romanblack_rss_at">at</string>
-    <string name="romanblack_rss_reverse">Reverse</string>
-    <string name="romanblack_rss_refresh">Refresh</string>
-    <string name="romanblack_rss_yes">Yes</string>
-    <string name="romanblack_rss_no">No</string>
-
-    <string name="romanblack_rss_feed">Feed</string>
-    <string name="romanblack_rss_html_page">HTML page</string>
-    <string name="romanblack_rss_send_email">Send email...</string>
-    <string name="romanblack_rss_read_more">read more</string>
-    <string name="romanblack_rss_show_media">Play media</string>
-    <string name="romanblack_rss_loading">Loading...</string>
-    <string name="romanblack_rss_cannot_init">Cannot initialize plugin.</string>
-    <string name="rss_back_button">Back</string>
-    <string name="rss_home_button">Home</string>
-    <string name="romanblack_rss_alert_no_internet">Cellular Data is Turned off. Turn on cellular data or use Wi-Fi to
+    <string name="news_feed">Feed</string>
+    <string name="news_html_page">HTML page</string>
+    <string name="news_send_email">Send email…</string>
+    <string name="news_rss_read_more">read more</string>
+    <string name="news_show_media">Play media</string>
+    <string name="news_loading">Loading…</string>
+    <string name="news_cannot_init">Cannot initialize plugin.</string>
+    <string name="news_back_button">Back</string>
+    <string name="news_home_button">Home</string>
+    <string name="news_alert_no_internet">Cellular Data is Turned off. Turn on cellular data or use Wi-Fi to
         access data
     </string>
-    <string name="romanblack_rss_alert_notifications_added_first_part">Added</string>
-    <string name="romanblack_rss_alert_notifications_added_seconds_part">notifications</string>
-    <string name="romanblack_rss_alert_video_not_valid">This video link is not valid.</string>
-    <string name="romanblack_rss_alert_video_press_play">Press play button.</string>
+    <string name="news_alert_notifications_added_first_part">Added</string>
+    <string name="news_alert_notifications_added_seconds_part">notifications</string>
+    <string name="news_alert_video_not_valid">This video link is not valid.</string>
+    <string name="news_alert_video_press_play">Press play button.</string>
 
-    <string name="romanblack_rss_dialog_add_notofications">Do you want to add notifications?</string>
+    <string name="news_dialog_add_notification">Do you want to add notifications?</string>
 
-    <string name="romanblack_rss_ptr_tap">Tap to refresh...</string>
-    <string name="romanblack_rss_ptr_release">Release to refresh...</string>
-    <string name="romanblack_rss_ptr_pull">Pull to refresh...</string>
-    <string name="title">Title</string>
-    <string name="jun">JUN</string>
-    <string name="tap_to_refresh">Tap to refresh...</string>
-    <string name="one_from_one">1 from 1</string>
-    <string name="open_app">Open App</string>
-    <string name="close">Close</string>
-    <string name="description">Description</string>
-    <string name="discription">Description</string>
+    <string name="news_ptr_tap">Tap to refresh…</string>
+    <string name="news_ptr_release">Release to refresh…</string>
+    <string name="news_ptr_pull">Pull to refresh…</string>
+    <string name="news_title">Title</string>
+    <string name="news_jun">JUN</string>
+    <string name="news_tap_to_refresh">Tap to refresh…</string>
+    <string name="news_one_from_one">1 from 1</string>
+    <string name="news_open_app">Open App</string>
+    <string name="news_close">Close</string>
+    <string name="news_description">Description</string>
     <string name="news_add_event_to_calendar">Calendar</string>
     <string name="news_share_event_via_email">Share Event via Email</string>
     <string name="news_share_event_via_sms">Share Event via SMS</string>
     <string name="news_menu_cancel">Cancel</string>
 
-    <string name="rss_no_items">Rss has no items</string>
-    <string name="rss_list_share">Share</string>
-    <string name="choose_email_client">Choose an Email client</string>
+    <string name="news_no_items">Rss has no items</string>
+    <string name="news_list_share">Share</string>
+    <string name="news_choose_email_client">Choose an Email client</string>
 
-    <string name="notification_error_ssl_cert_invalid">SSL error occurred. Would you like to proceed?</string>
-    <string name="on_cancel">Cancel</string>
-    <string name="on_continue">Continue</string>
+    <string name="news_notification_error_ssl_cert_invalid">SSL error occurred. Would you like to proceed?</string>
+    <string name="news_on_cancel">Cancel</string>
+    <string name="news_on_continue">Continue</string>
+    <string name="news_main_list_share">Share</string>
 </resources>

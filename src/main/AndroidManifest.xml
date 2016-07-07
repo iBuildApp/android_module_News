@@ -9,11 +9,19 @@
         <activity android:name="NewsPlugin"
             android:screenOrientation="portrait">
         </activity>
-        <activity android:name="FeedDetails"/>
-        <activity android:name="EventsNotification"/>
+        <activity android:name=".details.FeedDetails"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".details.NewsDetailsActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:windowSoftInputMode="stateHidden"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".WebActivity"
+            android:screenOrientation="portrait"/>
         <activity android:name="EventsNotificationView"/>
         <activity android:name="NotificationDetails"/>
-        <activity android:name=".VideoPlayer"/>
+        <activity android:name=".VideoPlayer"
+            android:screenOrientation="landscape"/>
     </application>
 
 </manifest>

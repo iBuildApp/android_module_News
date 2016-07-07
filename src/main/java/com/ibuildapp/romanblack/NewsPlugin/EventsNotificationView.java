@@ -83,7 +83,7 @@ public class EventsNotificationView extends Activity implements OnTouchListener 
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        setContentView(R.layout.romanblack_rss_notification_screen);
+        setContentView(R.layout.news_rss_notification_screen);
 
         String path = Environment.getExternalStorageDirectory() + "/AppBuilder/" + getPackageName() + "/.notifications";
         File file = new File(path);
@@ -96,12 +96,12 @@ public class EventsNotificationView extends Activity implements OnTouchListener 
             }
             file.delete();
 
-            textViewNotification = (TextView) findViewById(R.id.romanblack_rss_notification);
-            textViewCounter = (TextView) findViewById(R.id.romanblack_rss_notification_counter);
-            RelativeLayout notificationMain = (RelativeLayout) findViewById(R.id.romanblack_rss_notification_main);
-            notificationPanel = (LinearLayout) findViewById(R.id.romanblack_rss_notification_panel);
+            textViewNotification = (TextView) findViewById(R.id.news_notification_screen_text);
+            textViewCounter = (TextView) findViewById(R.id.news_notification_screen_counter);
+            RelativeLayout notificationMain = (RelativeLayout) findViewById(R.id.news_notification_screen_main);
+            notificationPanel = (LinearLayout) findViewById(R.id.news_notification_screen_panel);
 
-            Button btnClose = (Button) findViewById(R.id.romanblack_rss_push_button_close);
+            Button btnClose = (Button) findViewById(R.id.news_notification_screen_button_close);
             btnClose.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -109,7 +109,7 @@ public class EventsNotificationView extends Activity implements OnTouchListener 
                 }
             });
 
-            Button btnApp = (Button) findViewById(R.id.romanblack_rss_button_app);
+            Button btnApp = (Button) findViewById(R.id.news_notification_screen_button_app);
             btnApp.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -117,7 +117,7 @@ public class EventsNotificationView extends Activity implements OnTouchListener 
             });
             btnApp.setVisibility(View.GONE);
 
-            btnNext = (ImageView) findViewById(R.id.romanblack_rss_notification_next);
+            btnNext = (ImageView) findViewById(R.id.news_notification_screen_next);
             btnNext.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -125,7 +125,7 @@ public class EventsNotificationView extends Activity implements OnTouchListener 
                 }
             });
 
-            btnPrev = (ImageView) findViewById(R.id.romanblack_rss_notification_prev);
+            btnPrev = (ImageView) findViewById(R.id.news_notification_screen_previous);
             btnPrev.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -137,7 +137,7 @@ public class EventsNotificationView extends Activity implements OnTouchListener 
             textViewNotification.setText("");
             textViewCounter.setText("");
             if (notifications.size() > 0) {
-                textViewCounter.setText((position + 1) + " " + getString(R.string.romanblack_rss_from) + " " + notifications.size());
+                textViewCounter.setText((position + 1) + " " + getString(R.string.news_from) + " " + notifications.size());
                 textViewNotification.setText(notifications.get(position));
 
                 if (notifications.size() > 1) {
@@ -220,7 +220,7 @@ public class EventsNotificationView extends Activity implements OnTouchListener 
         }
 
         textViewNotification.setText(notifications.get(position));
-        textViewCounter.setText((position + 1) + " " + getString(R.string.romanblack_rss_from) + " " + notifications.size());
+        textViewCounter.setText((position + 1) + " " + getString(R.string.news_from) + " " + notifications.size());
         notificationPanel.clearAnimation();
         notificationPanel.refreshDrawableState();
     }
