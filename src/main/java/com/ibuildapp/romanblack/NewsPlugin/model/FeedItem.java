@@ -13,6 +13,9 @@ package com.ibuildapp.romanblack.NewsPlugin.model;
 import android.graphics.Color;
 import android.text.Html;
 import android.util.Log;
+
+import com.restfb.util.StringUtils;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -284,7 +287,7 @@ public class FeedItem implements Serializable {
      * @return true if this feed item has image, false otherwise
      */
     public boolean hasImage() {
-        return (imageUrl.length() > 0 || imagePath.length() > 0) ? true : false;
+        return imageUrl.length() > 0 || mediaUrl.contains(".jpg");
     }
 
     /**
@@ -335,7 +338,11 @@ public class FeedItem implements Serializable {
      * @return image url
      */
     public String getImageUrl() {
-        return imageUrl;
+        if (!StringUtils.isBlank(imageUrl))
+            return imageUrl;
+        else if (!StringUtils.isBlank(mediaUrl) && (mediaUrl.contains(".jpg") || mediaUrl.contains(".png")))
+                return mediaUrl;
+        else return "";
     }
 
     /**

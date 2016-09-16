@@ -99,14 +99,6 @@ public class RssAdapter extends RecyclerView.Adapter<RssViewHolder>{
             ((LinearLayout.LayoutParams)holder.inverseLayout.getLayoutParams()).setMargins(0, (int) (10*density), 0, 0 );
             holder.inverseLayout.setOrientation(LinearLayout.HORIZONTAL);
         }else  {
-           /* int bitmapHeight = resource.getHeight();
-            int bitmapWidth  =resource.getWidth();
-
-            int cardViewWidth = holder.cardView.getWidth();
-            int imageViewHeight = (bitmapHeight * cardViewWidth)/bitmapWidth;
-
-            System.out.print(bitmapHeight * bitmapWidth);
-*/
             LinearLayout.LayoutParams newParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             newParams.setMargins(0,0,0,0);
 
