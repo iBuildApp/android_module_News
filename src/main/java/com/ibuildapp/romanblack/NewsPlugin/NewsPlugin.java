@@ -317,7 +317,7 @@ public class NewsPlugin extends AppBuilderModuleMainAppCompat {
 
             try {
                 if (widget.getPluginXmlData().length() == 0) {
-                    if (currentIntent.getStringExtra("WidgetFile").length() == 0) {
+                    if (widget.getPathToXmlFile().length() == 0) {
                         handler.sendEmptyMessageDelayed(INITIALIZATION_FAILED, 3000);
                         return;
                     }
@@ -375,7 +375,7 @@ public class NewsPlugin extends AppBuilderModuleMainAppCompat {
                         parser = new EntityParser(widget.getPluginXmlData());
 
                     } else {
-                        String xmlData = readXmlFromFile(currentIntent.getStringExtra("WidgetFile"));
+                        String xmlData = readXmlFromFile(widget.getPathToXmlFile());
                         parser = new EntityParser(xmlData);
 
                     }
