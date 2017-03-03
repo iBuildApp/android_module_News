@@ -78,10 +78,10 @@ public class FeedParser {
                 is = conn.getInputStream();
             }else{
                 HttpURLConnection conn = (HttpURLConnection)feedUrl.openConnection();
-                conn.setRequestProperty("User-Agent",
+             /*   conn.setRequestProperty("User-Agent",
                         "Mozilla/5.0 (Linux; <Android Version>; <Build Tag etc.>) " +
                                 "AppleWebKit/<WebKit Rev> (KHTML, like Gecko) " +
-                                "Chrome/<Chrome Rev> Mobile Safari/<WebKit Rev>");
+                                "Chrome/<Chrome Rev> Mobile Safari/<WebKit Rev>");*/
                 //conn.setRequestProperty("User-Agent","Mozilla/5.0 ( compatible ) ");
                 //conn.setRequestProperty("Accept","*/*");
                 //conn.setDoOutput(true);
@@ -116,10 +116,10 @@ public class FeedParser {
                 is = conn.getInputStream();
             }else{
                 HttpURLConnection conn = (HttpURLConnection)feedUrl.openConnection();
-                conn.setRequestProperty("User-Agent",
+            /*    conn.setRequestProperty("User-Agent",
                         "Mozilla/5.0 (Linux; <Android Version>; <Build Tag etc.>) " +
                                 "AppleWebKit/<WebKit Rev> (KHTML, like Gecko) " +
-                                "Chrome/<Chrome Rev> Mobile Safari/<WebKit Rev>");
+                                "Chrome/<Chrome Rev> Mobile Safari/<WebKit Rev>");*/
                 // conn.setDoOutput(true);
                 is = conn.getInputStream();
             }

@@ -10,11 +10,13 @@
  ****************************************************************************/
 package com.ibuildapp.romanblack.NewsPlugin;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
@@ -24,6 +26,8 @@ import android.media.MediaPlayer.OnSeekCompleteListener;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.*;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -35,6 +39,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.appbuilder.sdk.android.AppBuilderModuleMainAppCompat;
 import com.appbuilder.sdk.android.Utils;
+import com.ibuildapp.romanblack.NewsPlugin.utils.NewsConstants;
 
 import java.io.*;
 import java.net.URL;
@@ -167,6 +172,7 @@ public class VideoPlayer extends AppBuilderModuleMainAppCompat implements Surfac
         }
     };
 
+
     @Override
     public void create() {
 
@@ -183,29 +189,6 @@ public class VideoPlayer extends AppBuilderModuleMainAppCompat implements Surfac
             state = statePause;
             videoCurrentPos = 0;
 
-            telephonyManager = (TelephonyManager) getApplicationContext()
-                    .getSystemService(Context.TELEPHONY_SERVICE);
-            telephonyManager.listen(new PhoneStateListener() {
-                @Override
-                public void onCallStateChanged(int state, String incomingNumber) {
-                    switch (state) {
-                        case TelephonyManager.CALL_STATE_IDLE:
-                            break;
-                        case TelephonyManager.CALL_STATE_OFFHOOK:
-                            Log.d("DEBUG", "OFFHOOK");
-                            break;
-                        case TelephonyManager.CALL_STATE_RINGING:
-                            if (VideoPlayer.this.state == statePlay) {
-                                playButton.setVisibility(View.VISIBLE);
-                                pauseButton.setVisibility(View.INVISIBLE);
-                                mediaPlayer.pause();
-                                VideoPlayer.this.state = statePause;
-                            }
-                            Log.d("DEBUG", "RINGING");
-                            break;
-                    }
-                }
-            }, PhoneStateListener.LISTEN_CALL_STATE);
 
             File cache = new File(cachePath);
             if (!cache.exists())
@@ -378,9 +361,53 @@ public class VideoPlayer extends AppBuilderModuleMainAppCompat implements Surfac
                 }
             });
 
+            requestPermissionPhoneState();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void requestPermissionPhoneState(){
+        ActivityCompat.requestPermissions(this,
+                new String[] {
+                        Manifest.permission.READ_PHONE_STATE,
+                        Manifest.permission.READ_SMS
+                },
+                NewsConstants.PERMISSION_REQUEST_CODE);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == NewsConstants.PERMISSION_REQUEST_CODE ) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                telephonyManager = (TelephonyManager) getApplicationContext()
+                        .getSystemService(Context.TELEPHONY_SERVICE);
+                telephonyManager.listen(new PhoneStateListener() {
+                    @Override
+                    public void onCallStateChanged(int state, String incomingNumber) {
+                        switch (state) {
+                            case TelephonyManager.CALL_STATE_IDLE:
+                                break;
+                            case TelephonyManager.CALL_STATE_OFFHOOK:
+                                Log.d("DEBUG", "OFFHOOK");
+                                break;
+                            case TelephonyManager.CALL_STATE_RINGING:
+                                if (VideoPlayer.this.state == statePlay) {
+                                    playButton.setVisibility(View.VISIBLE);
+                                    pauseButton.setVisibility(View.INVISIBLE);
+                                    mediaPlayer.pause();
+                                    VideoPlayer.this.state = statePause;
+                                }
+                                Log.d("DEBUG", "RINGING");
+                                break;
+                        }
+                    }
+                }, PhoneStateListener.LISTEN_CALL_STATE);
+            }
+
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     @Override
